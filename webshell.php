@@ -38,9 +38,9 @@ if (isset($_GET['dir'])) {
 }
 
 $dirs = scandir($dir);
-
+echo "Viewing directory " . $dir . "<br><br>";
 foreach ($dirs as $key => $value) {
-	echo $value . " " . printPerms($dir.$value) . "<br>";
+	echo "<a href='". $_SERVER['PHP_SELF'] . "?dir=". realpath($dir.'/'.$value) . "/'>". $value . "</a> " . printPerms($dir.$value) . "<br>";
 	
 }
 
