@@ -33,12 +33,8 @@ function printPerms($file) {
  
 
 $dir = $_GET['dir'];
-$file = '';
 if ($dir == NULL or !is_dir($dir)) {
 	$dir = './';
-}
-else if (is_file($dir)) {
-	$file = $dir;
 }
 $dir = realpath($dir.'/'.$value);
 
